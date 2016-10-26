@@ -1,5 +1,5 @@
 var serial;
-var portName = '/dev/cu.usbmodem32';
+var portName = '/dev/cu.usbmodem1421';
 var sensorValue;
 
 var sliderLeft = new CreateMySlider(600, 50, "LEFT");
@@ -8,6 +8,9 @@ var sliderMiddle = new CreateMySlider(600, 150, "MIDDLE");
 var angleLeft = 0;
 var angleRight = 0;
 var angleMiddle = 0;
+var leftValue = 0;
+var rightValue = 0;
+var middleValue = 0;
 
 var previous;
 
@@ -33,18 +36,18 @@ function draw() {
 
   //Left disc control
   sliderLeft.show();
-  var discLeft = new Disc(50, 400, 42, angleLeft);
-  var rotateSpeedLeft = map(sliderLeft.num, 0, 100, 0, PI / 100);
+  var discLeft = new Disc(60, 350, 42, angleLeft);
+  var rotateSpeedLeft = map(sliderLeft.num, 0, 20, 0, PI / 100);
   angleLeft = angleLeft + rotateSpeedLeft;
 
   //Right disc control
   sliderRight.show();
-  var discRight = new Disc(50, 500, 22, angleRight);
-  var rotateSpeedRight = map(sliderRight.num, 0, 100, 0, PI / 100);
+  var discRight = new Disc(60, 450, 22, angleRight);
+  var rotateSpeedRight = map(sliderRight.num, 0, 20, 0, PI / 100);
   angleRight = angleRight + rotateSpeedRight;
 
   //Get the intersection point
-  var node = new GetNode(discLeft.x, discLeft.y, 300, discRight.x, discRight.y, 300);
+  var node = new GetNode(discLeft.x, discLeft.y, 200, discRight.x, discRight.y, 200);
 
   if (!previous) {
     previous = node;
@@ -52,7 +55,7 @@ function draw() {
 
   //Canvas spins
   sliderMiddle.show();
-  var rotateSpeedMiddle = map(sliderMiddle.num, 0, 100, 0, PI / 500);
+  var rotateSpeedMiddle = map(sliderMiddle.num, 0, 20, 0, PI / 500);
   angleMiddle = angleMiddle + rotateSpeedMiddle;
   push();
   translate(width / 2, height / 2);
@@ -64,13 +67,16 @@ function draw() {
   previous = node;
 
   text("From Arduino:  " + sensorValue, 10, 30);
+  leftValue = floor(map(sliderLeft.num, 0, 20, 30, 4));
+  rightValue = floor(map(sliderRight.num, 0, 20, 30, 4));
+  middleValue = floor(map(sliderMiddle.num, 0, 20, 30, 4));
 }
 
 function mouseReleased() {
   println("sending");
-  serial.write(sliderLeft.num);
-  serial.write(sliderRight.num);
-  serial.write(sliderMiddle.num);
+  serial.write(leftValue);
+  serial.write(rightValue);
+  serial.write(middleValue);
   serial.write(255); // send raw binary of 255 to check
 }
 
