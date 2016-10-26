@@ -6,9 +6,9 @@ Stepper myStepper(stepsPerRevolution, 2, 3, 4, 5);
 Stepper myStepper2(stepsPerRevolution, 6, 7, 8, 9);
 Stepper myStepper3(stepsPerRevolution, 10, 11, 12, 13);
 
-int sliderLeft;
-int sliderRight;
-int sliderMiddle;
+int leftValue;
+int rightValue;
+int middleValue;
 
 void setup() {
   Serial.begin(9600);
@@ -17,27 +17,27 @@ void setup() {
 
 void loop() {
   if (Serial.available() > 3) {
-    sliderLeft = Serial.read();
-    sliderRight = Serial.read();
-    sliderMiddle = Serial.read();
+    leftValue = Serial.read();
+    rightValue = Serial.read();
+    middleValue = Serial.read();
     int endValue = Serial.read();
 
     if (endValue == 255) {
-      Serial.print(sliderLeft);
+      Serial.print(leftValue);
       Serial.print(",");
-      Serial.print(sliderRight);
+      Serial.print(rightValue);
       Serial.print(",");
-      Serial.println(sliderMiddle);
+      Serial.println(middleValue);
     }
   }
-  if (millis() % sliderLeft < 10) {
+  if (millis() % leftValue < 1) {
     myStepper.step(1);
   }
-  if (millis() % sliderRight < 10) {
+  if (millis() % rightValue < 1) {
     myStepper2.step(1);
   }
-  if (millis() % sliderMiddle < 10) {
+  if (millis() % middleValue < 1) {
     myStepper3.step(1);
   }
-
+  delay(1);
 }
